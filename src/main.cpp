@@ -24,14 +24,14 @@ struct Sensor {
 };
 
 Sensor sensors[3] = {
-  {"Temperature", 0, 0, 100, "°C", GC9A01A_RED},
+  {"Temperature", 0, 0, 100, "C", GC9A01A_RED},
   {"Humidity", 0, 0, 100, "%", GC9A01A_BLUE},
   {"Pressure", 0, 900, 1100, "hPa", GC9A01A_GREEN}
 };
 
 int currentSensor = 0;
 unsigned long lastSwitchTime = 0;
-const unsigned long SWITCH_INTERVAL = 3000; // 3 seconds per sensor
+const unsigned long SWITCH_INTERVAL = 7000; // 7 seconds per sensor
 
 // Display constants
 const int GAUGE_CENTER_X = 120;
@@ -83,16 +83,16 @@ void drawGauge(int sensorIndex) {
   tft.setTextColor(GC9A01A_WHITE);
   tft.setTextSize(2);
   int textWidth = strlen(sensor.name) * 12; // Approximate width
-  tft.setCursor((240 - textWidth) / 2, 30);
+  tft.setCursor((240 - textWidth) / 2, 80);
   tft.println(sensor.name);
   
   // Display current value
   char valueStr[20];
   sprintf(valueStr, "%.1f %s", sensor.value, sensor.unit);
   tft.setTextColor(sensor.color);
-  tft.setTextSize(3);
-  textWidth = strlen(valueStr) * 18; // Approximate width for size 3
-  tft.setCursor((240 - textWidth) / 2, 200);
+  tft.setTextSize(2);
+  textWidth = strlen(valueStr) * 12; // Approximate width for size 2
+  tft.setCursor((240 - textWidth) / 2, 160);
   tft.println(valueStr);
   
   // Display min/max range
@@ -145,7 +145,7 @@ void loop(void) {
   
   // Update sensor values every 500ms
   static unsigned long lastUpdateTime = 0;
-  if (currentTime - lastUpdateTime >= 500) {
+  if (currentTime - lastUpdateTime >= 5000) {
     updateSensorValues();
     lastUpdateTime = currentTime;
     
@@ -167,7 +167,7 @@ void loop(void) {
   
   // Redraw current gauge with updated values (smooth needle movement)
   static unsigned long lastRedrawTime = 0;
-  if (currentTime - lastRedrawTime >= 100) { // Redraw every 100ms for smooth updates
+  if (currentTime - lastRedrawTime >= 6900) { // Redraw every 5000ms for smooth updates
     drawGauge(currentSensor);
     lastRedrawTime = currentTime;
   }
